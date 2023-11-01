@@ -1,16 +1,18 @@
-FROM node:20-alpine
+FROM node:20-alpine as build
 
-# Create app directory
-WORKDIR /usr/src/app
+USER node
+WORKDIR /home/node/app
 
-COPY ./ ./
-
-RUN apk --update --no-cache add bash gcompat python3 g++ make postgresql-dev git
+COPY --chown=node:node ./ ./
 
 RUN rm -rf node_modules && \
-    npm cache clean --force && \
-    npm install
+    npm ci
 
-COPY . .
+FROM node:20-alpine
+
+RUN apk --update --no-cache add bash python3 g++ make postgresql-dev git gcompat
+
+USER node
+COPY --chown=node:node ./ ./
 
 CMD [ "npm", "start" ]
