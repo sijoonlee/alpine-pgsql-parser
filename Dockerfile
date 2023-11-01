@@ -1,11 +1,11 @@
-FROM --platform=linux/amd64 node:20-alpine
+FROM node:20-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
 
 COPY ./ ./
 
-RUN apk --update --no-cache add bash make gcompat python3 gcc postgresql-dev g++ git
+RUN apk --update --no-cache add bash gcompat python3 g++ make postgresql-dev git
 
 RUN rm -rf node_modules && \
     npm cache clean --force && \
